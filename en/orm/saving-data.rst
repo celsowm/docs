@@ -1029,6 +1029,32 @@ from request data your POST data should look like::
     $student = $this->Students->newEntity($data, [
         'associated' => ['Courses._joinData']
     ]);
+    
+Is some situations, the junction table could also have its own associations. For example if Doctors BelongsToMany Doctors through Appoitments and Appoitments hasMany Examinations. When saving junction table data from request data your POST data should look like:::
+
+    $data = [
+        'name' => 'Andy Bogard',
+        'birthday' => '1972-08-16',
+        'patients' => [
+            [
+                'name' => 'Mai Shiranui',
+                'birthday' => '1974-01-01',
+                'blood_type' => 'B',
+                '_joinData' => [
+                    'date' => '2020-01-01',
+                    'examinations' => [
+                        [
+                            'name' => 'blood test'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+    $student = $this->Students->newEntity($data, [
+            'associated' => ['Patients', 'Patients._joinData.Examinations']
+    ]);
 
 See the :ref:`associated-form-inputs` documentation for how to build inputs with
 ``FormHelper`` correctly.
